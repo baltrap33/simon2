@@ -5,11 +5,32 @@
 
 $(document).ready(function(){
 
-  var tabColors = ["green", "red", "yellow", "blue"];
-  var keys = [];
-
   function keyPlayed(detail) {
-    console.log(detail.color);
+    let color = detail.color;
+    if (color && gameMode){
+      let key = keys.find(function(k){
+        return k.color === color;
+      });
+      playerMelodie.push( key );
+      compareMelodies();
+    }
+  }
+
+  function compareMelodies(){
+    var error = false;
+    for (let i = 0; i < playerMelodie.length; i++) {
+      let userNote = playerMelodie[i];
+      let note = melodie[i];
+      if (note.color !== userNote.color){
+        error = true;
+      }
+    }
+    if (error) {
+      stopGame();
+    }
+    if (!error && playerMelodie.length === melodie.length) {
+      setTimeout(launchGame, 900);
+    }
   }
 
   function createKeys(tabColors){
@@ -45,14 +66,34 @@ $(document).ready(function(){
     });
   }
 
+  function addToMelodie(){
+    let indexRandom = Math.floor( Math.random() * keys.length );
+    melodie.push( keys[indexRandom] );
+  }
+
+  function launchGame(){
+    playerMelodie = [];
+    addToMelodie();
+    playMelodie(melodie);
+  }
+
+  function stopGame(){
+    gameMode = false;
+    console.log('GAMEOVER');
+  }
+
+  function initGame(){
+    gameMode = true;
+    melodie = [];
+    playerMelodie = [];
+    launchGame();
+  }
+  var tabColors = ["green", "red", "yellow", "blue"];
+  var keys = [], gameMode = false;
+  var melodie = [], playerMelodie = [];
 
   $(".start-btn").click(function(){
-    var melodie = [ keys[3],keys[1],keys[2],keys[3],keys[1],keys[1],keys[0],keys[3],keys[1],keys[2],keys[3],keys[1],keys[1],keys[0],keys[3],keys[1],keys[2],keys[3],keys[1],keys[1],keys[0] ];
-    playMelodie(melodie);
+    initGame();
   });
-
-
-
-
   createKeys(tabColors);
 });
