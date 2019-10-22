@@ -15,8 +15,21 @@ body {
     background: url("../assets/images/simonBg.png");
     display: flex;
     flex-flow: row wrap;
+    position: relative;
 }
 .key {
     width: 200px;
     height: 200px;
+}
+
+.start-btn{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 218px;
+    left: 210px;
+    border-radius: 20px;
+    /* background: #d64997; */
+    z-index: 2;
+    cursor: pointer;
 }

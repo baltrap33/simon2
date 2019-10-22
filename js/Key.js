@@ -20,18 +20,29 @@ class Key {
   startListeners(){
     var me = this;
     this.element.onclick = function(){
-      this.setAttribute('style',"background: url('assets/images/l_"+ me.color +".png')");
+
       me.play();
     }
   }
 
-  play(){
+  play(computerPlay){
       var me = this;
-      var audio = new Audio(this.sound);
-      audio.play();
-      setTimeout(function(){
-        me.stop();
-      }, 350);
+      this.element.setAttribute('style',"background: url('assets/images/l_"+ me.color +".png')");
+      return new Promise(function(resolve, reject){
+        var audio = new Audio(me.sound);
+        audio.play();
+        audio.onended = function(){
+          me.stop();
+          let ev = new CustomEvent("keyPlayed", { detail : { color : me.color } });
+          if(!computerPlay){
+            me.element.dispatchEvent(ev);
+          }
+          resolve();
+        };
+        audio.onerror = function(err){
+          reject(err);
+        }
+      });
   }
 
   stop(){
